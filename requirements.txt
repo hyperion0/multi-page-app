@@ -100,7 +100,7 @@ pysftp==0.2.9
 python-dateutil==2.8.0
 pytz==2019.3
 PyWavelets==1.1.1
-pywin32==225
+pywin32
 pywinpty==0.5.5
 pyzmq==18.0.1
 qtconsole==4.5.5
