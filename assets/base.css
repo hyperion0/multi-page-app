@@ -1,0 +1,87 @@
+html {
+    font-size: 10px;
+}
+body {
+    background-color: #f2f2f2;
+    margin-left: 5%;
+    margin-right: 5%;
+    margin-bottom: 5%;
+  }
+
+.header {
+  background-color: #F1F1F1;
+  text-align: center;
+  padding: 0px;
+}
+
+.bannerbutton {
+  padding: 15px;
+}
+
+
+.bannerbutton {
+  padding: 15px;
+}
+
+
+.indexbuttonchina {
+  padding: 50px;
+  margin: 50px;
+  border: 2px solid black;
+  background-image: url('china_monitoring_screenshot.PNG');
+  background-size:contain;
+  color: black;
+  text-decoration: none;
+  border-radius: 5px;
+}
+
+.indexbuttonsorting {
+  padding: 50px;
+  margin: 50px;
+  border: 2px solid black;
+  background-image: url('sorting_algorithm_screenshot.PNG');
+  background-size:contain;
+  color: black;
+  text-decoration: none;
+  border-radius: 5px;
+}
+
+.indextitle {
+  padding: 15px;
+  background-color: lightgray;
+  border-radius: 5px;
+  text-align: center;
+}
+
+.pretty_container {
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    margin: 10px;
+    padding: 15px;
+    position: relative;
+    box-shadow: 2px 2px 2px lightgrey;
+  }
+
+.graph {
+  border-radius: 5px;
+  background-color: #f9f9f9;
+  margin: 10px;
+  padding: 15px;
+  position: relative;
+  box-shadow: 2px 2px 2px lightgrey;
+}
+
+
+.logo {
+  height: 50px;
+  width: auto;
+}
+
+.a {
+  color: black;
+  text-decoration: none;
+}
+
+a:hover {
+  color: grey;
+}
