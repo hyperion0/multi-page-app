@@ -6,15 +6,45 @@ import dash_canvas
 from dash_canvas import DashCanvas
 from app import app
 from utils import Header
-from dash_canvas.utils import array_to_data_url
 import numpy as np
 from skimage import io, color, img_as_ubyte
 import os
 import json
 from skimage import draw, morphology
-from scipy import ndimage
+from scipy.ndimage import binary_dilation
 import logging
+import plotly.graph_objects as go
+import plotly.express as px
+from PIL import Image
+from io import BytesIO
+import base64
 
+
+def array_to_data_url(img, dtype=None):
+    """
+    Converts numpy array to data string, using Pillow.
+
+    The returned image string has the right format for the ``image_content``
+    property of DashCanvas.
+
+    Parameters
+    ==========
+
+    img : numpy array
+
+    Returns
+    =======
+
+    image_string: str
+    """
+    if dtype is not None:
+        img = img.astype(dtype)
+    pil_img = Image.fromarray(img)
+    buff = BytesIO()
+    pil_img.save(buff, format="png")
+    prefix = b'data:image/png;base64,'
+    image_string = (prefix + base64.b64encode(buff.getvalue())).decode("utf-8")
+    return image_string
 
 logger = logging.getLogger()
 # on met le niveau du logger à DEBUG, comme ça il écrit tout
@@ -66,6 +96,7 @@ def _indices_of_path(path, scale=1):
         cc += list(inds[1])
     return rr, cc
 
+
 def filter_inds(inds, shape):
     """Filter inds couples where one of the indice is going out of shape size
 
@@ -88,8 +119,9 @@ def filter_inds(inds, shape):
         if x < shape[0] and y < shape[1]:
             x_f.append(x)
             y_f.append(y)
-    filter_inds = (x_f, y_f)     
+    filter_inds = (x_f, y_f)
     return filter_inds
+
 
 def parse_jsonstring(string, shape=None, scale=1):
     """
@@ -129,12 +161,13 @@ def parse_jsonstring(string, shape=None, scale=1):
             mask_tmp = np.zeros(shape, dtype=np.bool)
             inds = filter_inds(inds, shape)
             mask_tmp[inds[0], inds[1]] = 1
-            mask_tmp = ndimage.binary_dilation(mask_tmp, morphology.disk(radius))
+            mask_tmp = binary_dilation(mask_tmp, morphology.disk(radius))
             mask += mask_tmp
     return mask
 
 
 appname = "Pathfinding"
+
 
 filename = "https://raw.githubusercontent.com/hyperion0/multi-page-app/master/assets/pathfinding.png"
 img = io.imread(filename, as_gray=True)
@@ -152,18 +185,32 @@ layout = html.Div(
             goButtonTitle="Find Path",
         ),
         dcc.Markdown(img.shape, id="log"),
-        dcc.Graph()
+        dcc.Graph(id="pathgraph", figure={"data": [go.Heatmap()]}),
     ]
 )
 
 
 @app.callback(
-    [Output("canvas", "image_content")],
+    [Output("pathgraph", "figure"), Output("canvas", "image_content")],
     [Input("canvas", "json_data")],
 )
 def update_data(string):
     if string:
-        mask = parse_jsonstring(string, img.shape, 0.95)
+        mask = parse_jsonstring(string, img.shape)
     else:
         raise PreventUpdate
-    return array_to_data_url((255 * mask).astype(np.uint8))
+
+    data = (255 * mask).astype(np.uint8)
+    data_str = array_to_data_url(data)
+
+    data = [data[i, :] for i in range(data.shape[0])]
+
+    fig = go.Figure(
+        data=[
+            go.Heatmap(
+                z=data,
+                colorscale=[[0, "white"], [0.5, "white"], [0.5, "black"], [1, "black"]],
+            )
+        ]
+    )
+    return fig, data_str

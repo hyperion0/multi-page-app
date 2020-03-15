@@ -57,6 +57,6 @@ def display_page(pathname):
     else:
         return "Error 404   :   Sorry, this URL does not exist :("
 
-
+server = app.server
 if __name__ == "__main__":
     app.run_server(debug=True)
