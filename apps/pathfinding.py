@@ -8,7 +8,6 @@ from app import app
 from utils import Header
 import numpy as np
 from skimage import io, color, img_as_ubyte
-import os
 import json
 from skimage import draw, morphology
 from scipy.ndimage import binary_dilation

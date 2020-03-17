@@ -1,17 +1,15 @@
 # coding: utf-8
-import dash
 import dash_core_components as dcc
 import dash_html_components as html
 from dash.dependencies import Input, Output
-import plotly.express as px
 import pandas as pd
-import os
+from os import listdir
 import requests
 from app import app
 from utils import Header
 
 appname = "China Monitoring"
-filelist = os.listdir("data")
+filelist = listdir("data")
 city_list = [elt.split("-")[0] for elt in filelist]
 column_list = [
     " pm25",
